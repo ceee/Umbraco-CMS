@@ -248,8 +248,14 @@
 
       };
 
-      scope.openCompositionsDialog = function() {
 
+      scope.isCompositionsDialogLoading = false;
+
+      scope.openCompositionsDialog = function() {
+        if (scope.isCompositionsDialogLoading) {
+            return;
+        }
+        scope.isCompositionsDialogLoading = true;
         scope.compositionsDialogModel = {
             contentType: scope.model,
             compositeContentTypes: scope.model.compositeContentTypes,
@@ -266,7 +272,7 @@
 
               // remove overlay
               editorService.close();
-
+              scope.isCompositionsDialogLoading = false;
             },
             close: function(oldModel) {
 
@@ -276,7 +282,7 @@
 
                 // remove overlay
                 editorService.close();
-
+                scope.isCompositionsDialogLoading = false;
             },
             selectCompositeContentType: function (selectedContentType) {
 
@@ -354,6 +360,7 @@
                 scope.compositionsDialogModel.totalContentTypes = parseInt(result, 10);
             })
         ]).then(function() {
+            scope.isCompositionsDialogLoading = false;
             //resolves when both other promises are done, now show it
             editorService.open(scope.compositionsDialogModel);
         });
